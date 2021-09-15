@@ -1,0 +1,35 @@
+{
+    "name": "Canvas Node",
+    "description": "Canvas Heroku Node.js",
+    "keywords": [
+        "nodejs",
+        "canvas",
+        "salesforce"
+    ],
+    "logo": "",
+    "image": "heroku/nodejs",
+    "website": "https://github.com/MaurizioBella/sf-canvas-node",
+    "repository": "https://github.com/MaurizioBella/sf-canvas-node",
+    "success_url": "/",
+    "env": {
+        "CANVAS_CONSUMER_SECRET": {
+            "description": "The connected app consumer key, which you can find on the connected app Manage Connected Apps page or from the connected app definition.",
+            "value": "",
+            "required": true
+        }
+    },
+    "formation": {
+        "web": {
+            "quantity": 1,
+            "size": "free"
+        }
+    },
+    "addons": [
+        "papertrail:choklad"
+    ],
+    "buildpacks": [
+        {
+            "url": "heroku/nodejs"
+        }
+    ]
+}

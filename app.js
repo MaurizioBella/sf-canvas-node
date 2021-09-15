@@ -5,32 +5,33 @@
   Ref: https://github.com/ccoenraets/salesforce-canvas-demo
 
   */
-var express = require("express"),
+const express = require("express"),
   bodyParser = require("body-parser"),
   path = require("path"),
   request = require("request"),
   // CryptoJS = require("crypto-js"),
   decode = require("salesforce-signed-request");
-var app = express();
+require('dotenv').config()
+const app = express();
 // make sure to set by:
 //  heroku config:set CANVAS_CONSUMER_SECRET=adsfadsfdsfsdafsdfsdf
 
-var consumerSecret = process.env.CANVAS_CONSUMER_SECRET;
+const consumerSecret = process.env.CANVAS_CONSUMER_SECRET;
 
 app.use(express.static(path.join(__dirname, "views")));
 app.set("view engine", "ejs");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ entended: true }));
 // just a welcome page
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.render("welcome");
 });
 
 // SF call POST us on this URI with signed request
-app.post("/signedrequest", function(req, res) {
+app.post("/signedrequest", function (req, res) {
   console.log(req.body.signed_request);
 
-  var signedRequest = decode(req.body.signed_request, consumerSecret),
+  const signedRequest = decode(req.body.signed_request, consumerSecret),
     context = signedRequest.context,
     oauthToken = signedRequest.client.oauthToken,
     instanceUrl = signedRequest.client.instanceUrl;
@@ -43,10 +44,10 @@ app.post("/signedrequest", function(req, res) {
     }
   };
 
-  request(contactRequest, function(err, response, body) {
+  request(contactRequest, function (err, response, body) {
     const contactRecords = JSON.parse(body).records;
 
-    var payload = {
+    const payload = {
       instanceUrl: instanceUrl,
       headers: {
         Authorization: "OAuth " + oauthToken
@@ -60,12 +61,12 @@ app.post("/signedrequest", function(req, res) {
 
 
 // POST to toolbar URI - make this uri as Canvas App URL in the connected app (AccountPositionApp2) setting 
-app.post("/myevents", function(req, res) {
-  var signedRequest = decode(req.body.signed_request, consumerSecret);
-  res.render("myevents", {signedRequest: signedRequest});
+app.post("/myevents", function (req, res) {
+  const signedRequest = decode(req.body.signed_request, consumerSecret);
+  res.render("myevents", { signedRequest: signedRequest });
 });
 
 
-var port = process.env.PORT || 9000;
+const port = process.env.PORT || 9000;
 app.listen(port);
 console.log("Listening on port " + port);

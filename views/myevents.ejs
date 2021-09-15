@@ -1,33 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Toolbar</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://mohan-chinnappan-n.github.io/css/navbar-blue.css">
+    <!-- <link rel="stylesheet" href="https://mohan-chinnappan-n.github.io/css/navbar-blue.css"> -->
+    <link rel="stylesheet" href="./css/navbar-blue.css">
 
-
-    <script src="js/canvas-all.js" ></script>
+    <script src="js/canvas-all.js"></script>
 </head>
+
 <body>
 
 
 
-<script>
-function postCustomMessage() {
-     var signedRequest = JSON.parse('<%- JSON.stringify(signedRequest) %>');
-     // the payload, you can put the parameters from the signedRequest
-     Sfdc.canvas.client.publish(signedRequest.client, {name : "statusChanged", payload : {parameters : signedRequest.context.parameters}});
-}
+    <script>
+        function postCustomMessage() {
+            var signedRequest = JSON.parse('<%- JSON.stringify(signedRequest) %>');
+            // the payload, you can put the parameters from the signedRequest
+            Sfdc.canvas.client.publish(signedRequest.client, { name: "statusChanged", payload: { parameters: signedRequest.context.parameters } });
+        }
 
-</script>
+    </script>
 
-<ul class='list-group'>
+    <ul class='list-group'>
         <li class='list-group-item'><a href="#" onclick="postCustomMessage();">Send to Dennis Ritchie</a></li>
     </ul>
 </body>
+
 </html>
