@@ -96,6 +96,7 @@ app.post("/signedrequest", function (req, res) {
   };
   // const sess = req.session;
   console.log(req.session)
+  console.log(context)
   session.userid = context.user.userId;
 
   request(contactRequest, function (err, response, body) {
