@@ -94,9 +94,9 @@ app.post("/signedrequest", function (req, res) {
       Authorization: "OAuth " + oauthToken
     }
   };
-  const sess = req.session;
+  // const sess = req.session;
   console.log(req.session)
-  sess.userid = context.user.userId;
+  session.userid = context.user.userId;
 
   request(contactRequest, function (err, response, body) {
     const contactRecords = JSON.parse(body).records;
