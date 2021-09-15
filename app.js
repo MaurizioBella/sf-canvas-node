@@ -45,6 +45,13 @@ const noCache = require('nocache');
 const { log } = require("console");
 app.use(noCache())
 
+redisClient.on('error', function (err) {
+  console.log('Could not establish a connection with redis. ' + err);
+});
+redisClient.on('connect', function (err) {
+  console.log('Connected to redis successfully');
+});
+
 app.use(session({
   store: new RedisStore({ client: redisClient }),
   secret: 'secret$%^134',
@@ -53,6 +60,7 @@ app.use(session({
   cookie: {
     secure: true, // if true only transmit cookie over https
     sameSite: 'none',
+    path: '/',
     httpOnly: true, // if true prevent client side JS from reading the cookie 
     maxAge: 1000 * 60 * 10 // session max age in miliseconds
   }
@@ -98,9 +106,8 @@ app.post("/signedrequest", function (req, res) {
   // const sess = req.session;
   console.log(req.session)
   console.log(context)
-  const sess = req.session;
-  sess.userid = context.user.userId;
-  console.log(sess.userid);
+  req.session.userid = context.user.userId;
+  console.log(req.session.userid);
 
 
   request(contactRequest, function (err, response, body) {
