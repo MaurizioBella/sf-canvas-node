@@ -12,19 +12,38 @@ const express = require("express"),
   // CryptoJS = require("crypto-js"),
   decode = require("salesforce-signed-request");
 require('dotenv').config()
+const cookieParser = require("cookie-parser");
+const sessions = require('express-session');
 const app = express();
+
 // make sure to set by:
 //  heroku config:set CANVAS_CONSUMER_SECRET=adsfadsfdsfsdafsdfsdf
 
 const consumerSecret = process.env.CANVAS_CONSUMER_SECRET;
 
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(sessions({
+  secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+  saveUninitialized: true,
+  cookie: { maxAge: oneDay },
+  resave: false
+}));
+
 app.use(express.static(path.join(__dirname, "views")));
 app.set("view engine", "ejs");
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ entended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 // just a welcome page
 app.get("/", function (req, res) {
-  res.render("welcome");
+  session = req.session;
+  if (session.userid) {
+    const title = 'Maurizio';
+    res.render("welcome", { name: title });
+  } else
+    res.render("welcome");
+
 });
 
 // SF call POST us on this URI with signed request
@@ -43,7 +62,9 @@ app.post("/signedrequest", function (req, res) {
       Authorization: "OAuth " + oauthToken
     }
   };
-
+  session = req.session;
+  session.userid = req.body.username;
+  console.log(req.session)
   request(contactRequest, function (err, response, body) {
     const contactRecords = JSON.parse(body).records;
 
