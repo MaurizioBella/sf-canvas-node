@@ -109,7 +109,8 @@ app.post("/signedrequest", function (req, res) {
       context: context,
       contacts: contactRecords
     };
-    res.render("index", { payload: payload });
+    tagline = context.user.userId;
+    res.render("index", { payload: payload, tagline: tagline });
   });
 });
 
