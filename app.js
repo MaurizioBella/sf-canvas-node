@@ -13,7 +13,9 @@ const express = require("express"),
   decode = require("salesforce-signed-request");
 require('dotenv').config()
 const cookieParser = require("cookie-parser");
-const sessions = require('express-session');
+const session = require('express-session');
+const redis = require('redis');
+const connectRedis = require('connect-redis');
 const app = express();
 
 // make sure to set by:
@@ -22,12 +24,32 @@ const app = express();
 const consumerSecret = process.env.CANVAS_CONSUMER_SECRET;
 
 const oneDay = 1000 * 60 * 60 * 24;
-app.use(sessions({
-  secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-  saveUninitialized: true,
-  cookie: { maxAge: oneDay },
-  resave: false
-}));
+// app.use(session({
+//   secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+//   saveUninitialized: true,
+//   cookie: { maxAge: oneDay },
+//   resave: false
+// }));
+
+const RedisStore = connectRedis(session)
+//Configure redis client
+const redisClient = redis.createClient({
+  host: 'localhost',
+  port: 6379
+})
+
+
+app.use(session({
+  store: new RedisStore({ client: redisClient }),
+  secret: 'secret$%^134',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false, // if true only transmit cookie over https
+    httpOnly: false, // if true prevent client side JS from reading the cookie 
+    maxAge: 1000 * 60 * 10 // session max age in miliseconds
+  }
+}))
 
 app.use(express.static(path.join(__dirname, "views")));
 app.set("view engine", "ejs");
@@ -35,11 +57,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+
+
 // just a welcome page
 app.get("/", function (req, res) {
-  session = req.session;
+  const sess = req.session;
   let tagline = 'Anonymous';
-  if (session.userid) {
+  if (sess.userid) {
+    console.log(sess.userid);
     tagline = 'Maurizio';
     res.render("welcome", { tagline: tagline });
   } else
@@ -63,9 +88,10 @@ app.post("/signedrequest", function (req, res) {
       Authorization: "OAuth " + oauthToken
     }
   };
-  session = req.session;
-  session.userid = req.body.username;
+  const sess = req.session;
   console.log(req.session)
+  sess.userid = context.user.userId;
+
   request(contactRequest, function (err, response, body) {
     const contactRecords = JSON.parse(body).records;
 
