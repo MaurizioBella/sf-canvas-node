@@ -12,6 +12,8 @@
     "ejs": ">=2.5.5",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
+    "helmet": "^4.6.0",
+    "nocache": "^3.0.1",
     "redis": "^3.1.2",
     "request": "^2.88.0",
     "salesforce-signed-request": "^0.0.1"
