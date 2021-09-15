@@ -14,6 +14,7 @@ const express = require("express"),
 require('dotenv').config()
 const cookieParser = require("cookie-parser");
 const session = require('express-session');
+// import { createClient } from 'redis';
 const redis = require('redis');
 const connectRedis = require('connect-redis');
 const app = express();
@@ -22,6 +23,7 @@ const app = express();
 //  heroku config:set CANVAS_CONSUMER_SECRET=adsfadsfdsfsdafsdfsdf
 
 const consumerSecret = process.env.CANVAS_CONSUMER_SECRET;
+
 
 const oneDay = 1000 * 60 * 60 * 24;
 // app.use(session({
@@ -33,10 +35,12 @@ const oneDay = 1000 * 60 * 60 * 24;
 
 const RedisStore = connectRedis(session)
 //Configure redis client
-const redisClient = redis.createClient({
-  host: 'localhost',
-  port: 6379
-})
+const redisClient = redis.createClient(process.env.REDIS_URL);
+// const redisClient = redis.createClient({
+//   host: 'localhost',
+//   port: 6379
+// })
+
 
 
 app.use(session({
@@ -45,8 +49,8 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: false, // if true only transmit cookie over https
-    httpOnly: false, // if true prevent client side JS from reading the cookie 
+    secure: true, // if true only transmit cookie over https
+    httpOnly: true, // if true prevent client side JS from reading the cookie 
     maxAge: 1000 * 60 * 10 // session max age in miliseconds
   }
 }))
