@@ -64,6 +64,7 @@ redisClient.on('connect', function (err) {
 app.use(session({
   store: new RedisStore({ client: redisClient }),
   secret: 'secret$%^134',
+  name: 'sf-canvas-node',
   resave: false,
   saveUninitialized: false,
   cookie: {
