@@ -41,7 +41,8 @@ const redisClient = redis.createClient(process.env.REDIS_URL);
 //   port: 6379
 // })
 
-const noCache = require('nocache')
+const noCache = require('nocache');
+const { log } = require("console");
 app.use(noCache())
 
 app.use(session({
@@ -97,7 +98,10 @@ app.post("/signedrequest", function (req, res) {
   // const sess = req.session;
   console.log(req.session)
   console.log(context)
-  session.userid = context.user.userId;
+  const sess = req.session;
+  sess.userid = context.user.userId;
+  console.log(sess.userid);
+
 
   request(contactRequest, function (err, response, body) {
     const contactRecords = JSON.parse(body).records;
