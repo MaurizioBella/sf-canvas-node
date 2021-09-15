@@ -44,6 +44,7 @@ const redisClient = redis.createClient(process.env.REDIS_URL);
 
 const noCache = require('nocache');
 const { log } = require("console");
+app.set('trust proxy', 1);
 app.use(noCache())
 
 const corsOptions = {
