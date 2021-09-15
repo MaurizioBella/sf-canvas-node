@@ -38,11 +38,12 @@ app.use(cookieParser());
 // just a welcome page
 app.get("/", function (req, res) {
   session = req.session;
+  let tagline = 'Anonymous';
   if (session.userid) {
-    const tagline = 'Maurizio';
+    tagline = 'Maurizio';
     res.render("welcome", { tagline: tagline });
   } else
-    res.render("welcome");
+    res.render("welcome", { tagline: tagline });
 
 });
 
