@@ -39,8 +39,8 @@ app.use(cookieParser());
 app.get("/", function (req, res) {
   session = req.session;
   if (session.userid) {
-    const title = 'Maurizio';
-    res.render("welcome", { name: title });
+    const tagline = 'Maurizio';
+    res.render("welcome", { tagline: tagline });
   } else
     res.render("welcome");
 
