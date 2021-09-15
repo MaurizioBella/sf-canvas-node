@@ -17,6 +17,7 @@ const session = require('express-session');
 // import { createClient } from 'redis';
 const redis = require('redis');
 const connectRedis = require('connect-redis');
+const cors = require('cors')
 const app = express();
 
 // make sure to set by:
@@ -45,6 +46,14 @@ const noCache = require('nocache');
 const { log } = require("console");
 app.use(noCache())
 
+const corsOptions = {
+  origin: '*', //the port my react app is running on.
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+
 redisClient.on('error', function (err) {
   console.log('Could not establish a connection with redis. ' + err);
 });
@@ -60,7 +69,6 @@ app.use(session({
   cookie: {
     secure: true, // if true only transmit cookie over https
     sameSite: 'none',
-    path: '/',
     httpOnly: true, // if true prevent client side JS from reading the cookie 
     maxAge: 1000 * 60 * 10 // session max age in miliseconds
   }
